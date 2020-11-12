@@ -14,3 +14,12 @@ BCR
 ├── predict.py   
 └── results    
 
+#### Todo list    
+
+- [x] Model selection   
+- [x] Model retraining     
+- [ ] Model optimization   
+  - [ ] Model compression    
+  - [ ] Model quantization    
+- [ ] Model deployment    
+
