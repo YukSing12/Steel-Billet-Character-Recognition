@@ -5,7 +5,7 @@ English | [简体中文](README_ch.md)
 Steel Billet Character Recognition
 
 #### Overall directory structure
-The overall directory structure of BCR(Steel Billet Character Recognition) is introduced as follows:
+The overall directory structure of SBCR(Steel Billet Character Recognition) is introduced as follows:
 
 Steel-Billet-Character-Recognition   
 ├── [Xiang-Steel-Billet-Dataset](https://github.com/YukSing12/Steel-Billet-Dataset)    (Not open source yet)   
