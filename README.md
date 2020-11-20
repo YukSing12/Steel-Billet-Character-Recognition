@@ -18,6 +18,8 @@ Steel-Billet-Character-Recognition
 ## Todo list    
 
 - [x] Model selection   
+  - [x] Detection: DB([paper](https://arxiv.org/abs/1911.08947))   
+  - [x] Recognition: CRNN([paper](https://arxiv.org/abs/1507.05717))   
 - [x] Model retraining     
 - [ ] Model optimization   
   - [ ] Model compression    
