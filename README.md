@@ -1,10 +1,10 @@
 English | [简体中文](README_ch.md)
 # Steel Billet Character Recognition，SBCR
 
-#### Description
+## Description
 Steel Billet Character Recognition
 
-#### Overall directory structure
+## Overall directory structure
 The overall directory structure of SBCR(Steel Billet Character Recognition) is introduced as follows:
 
 Steel-Billet-Character-Recognition   
@@ -15,7 +15,7 @@ Steel-Billet-Character-Recognition
 ├── predict.py   
 └── results    
 
-#### Todo list    
+## Todo list    
 
 - [x] Model selection   
 - [x] Model retraining     
@@ -24,3 +24,14 @@ Steel-Billet-Character-Recognition
   - [ ] Model quantization    
 - [ ] Model deployment    
 
+## Dataset
+### Xiang-Steel-Billet-Dataset
+<div align="center">
+    <img src="Xiang-Steel-Billet-Dataset/train_image/BXAIa2019082512471601.jpg" width="400">
+</div>
+
+### Tangshan-Steel-Billet-Dataset    
+<div align="center">
+    <img src="output/01440.JPG" width=400>
+    <img src="output/01510.JPG" width=400>
+</div>
