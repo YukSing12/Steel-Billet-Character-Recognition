@@ -18,6 +18,8 @@ Steel-Billet-Character-Recognition
 ## 待办    
 
 - [x] 模型选择   
+  - [x] 检测：DB([paper](https://arxiv.org/abs/1911.08947))
+  - [x] 识别：CRNN([paper](https://arxiv.org/abs/1507.05717))
 - [x] 模型训练     
 - [ ] 模型优化   
   - [ ] 模型压缩    
