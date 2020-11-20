@@ -1,10 +1,10 @@
 [English](README.md) | 简体中文
 # 钢胚字符识别，SBCR
 
-#### 介绍
+## 介绍
 钢胚字符识别
 
-#### 整体目录结构
+## 整体目录结构
 Steel-Billet-Character-Recognition 的整体目录结构介绍如下：
 
 Steel-Billet-Character-Recognition   
@@ -15,7 +15,7 @@ Steel-Billet-Character-Recognition
 ├── predict.py   
 └── results  
 
-#### 待办    
+## 待办    
 
 - [x] 模型选择   
 - [x] 模型训练     
@@ -23,3 +23,15 @@ Steel-Billet-Character-Recognition
   - [ ] 模型压缩    
   - [ ] 模型量化    
 - [ ] 模型部署    
+
+## 数据集
+### 湘钢数据集   
+<div align="center">
+    <img src="Xiang-Steel-Billet-Dataset/train_image/BXAIa2019082512471601.jpg" width="400">
+</div>
+
+### 唐钢数据集       
+<div align="center">
+    <img src="output/01440.JPG" width=400>
+    <img src="output/01510.JPG" width=400>
+</div>
