@@ -42,7 +42,7 @@ Steel-Billet-Character-Recognition
   conda create -n SBCR python=3.7.4
   conda activate SBCR
 
-  # Install PaddlePaddle with 10.0
+  # Install PaddlePaddle with CUDA 10.0
   conda install paddlepaddle-gpu==2.0.0rc0 cudatoolkit=10.0 -c paddle
   
   # Check installation of paddle
@@ -61,12 +61,14 @@ Steel-Billet-Character-Recognition
   git clone https://github.com/PaddlePaddle/PaddleOCR.git
   # Install paddleocr
   cd PaddleOCR/
+  pip install -r requirements.txt -i https://mirror.baidu.com/pypi/simple
   python setup.py install
   
   # Clone PaddleSlim
   git clone https://github.com/PaddlePaddle/PaddleSlim.git
   # Install paddleslim
   cd PaddleSlim/
+  pip install -r requirements.txt -i https://mirror.baidu.com/pypi/simple
   python setup.py install
 
 ```
