@@ -24,7 +24,9 @@ Steel-Billet-Character-Recognition
 - [ ] 模型优化   
   - [ ] 模型压缩    
   - [ ] 模型量化    
-- [ ] 模型部署   
+- [ ] 模型部署
+  - [ ] C++ 预测
+  - [ ] TensorRT 加速
 
 ## 安装   
 
