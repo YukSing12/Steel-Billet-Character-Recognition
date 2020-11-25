@@ -48,42 +48,44 @@ if __name__=='__main__':
 
     # Preference
     output_dir = "./output/"
-    visualization = True
-    img_set_dir = "Tangshan-Steel-Billet-Dataset/det_image/test/"
-    #img_set_dir = "Steel-Billet-Dataset/test_image/"
+    visualization = False
+    #img_set_dir = "Tangshan-Steel-Billet-Dataset/det_image/eval/"
+    img_set_dir = "Steel-Billet-Dataset/test_image/"
 
-    label_file = "Tangshan-Steel-Billet-Dataset/text_localization_test_label.txt"
-    #label_file = "Steel-Billet-Dataset/text_localization_test_label.txt"
+    #label_file = "Tangshan-Steel-Billet-Dataset/text_localization_eval_label.txt"
+    label_file = "Steel-Billet-Dataset/text_localization_test_label.txt"
     
     # Set GPU
     os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID" # see issue #152
     os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
     # Init Logger
-    t = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    t = 'img2'
-    output_dir = output_dir + str(t) + "/"
+    log_file_name = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    # log_file_name = 'server_det_tsbd'
+    output_dir = output_dir + str(log_file_name) + "/"
     if visualization:
-        if not os.path.exists(output_dir+"visualization/"):
-            os.makedirs(output_dir+"visualization/")
+        if not os.path.exists(output_dir+"visualization/correct/"):
+            os.makedirs(output_dir+"visualization/correct/")
+        if not os.path.exists(output_dir+"visualization/wrong/"):
+            os.makedirs(output_dir+"visualization/wrong/")
     else:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
-    sys.stdout = Logger(output_dir+str(t)+".log", sys.stdout)
-    sys.stderr = Logger(output_dir+str(t)+"_error.log", sys.stderr)
+    sys.stdout = Logger(output_dir+str(log_file_name)+".log", sys.stdout)
+    sys.stderr = Logger(output_dir+str(log_file_name)+"_error.log", sys.stderr)
     wrong_rec_logger = []
 
     # Load model
-    use_gpu = True
+    use_gpu = False
     enable_mkldnn = False
     use_angle_cls = False   
-    det_model_dir = "PaddleOCR/inference/mobile_det_tsbd2"
+    det_model_dir = "PaddleOCR/inference/mobile_det_sbd"
     cls_model_dir = "PaddleOCR/inference/ch_ppocr_mobile_v1.1_cls_infer"
-    rec_model_dir = "PaddleOCR/inference/server_rec_tsbd2"
+    rec_model_dir = "PaddleOCR/inference/mobile_rec_sbd"
     ocr = PaddleOCR(use_angle_cls=use_angle_cls, lang="ch",use_gpu=use_gpu,use_space_char=False,gpu_mem=8000,
                     enable_mkldnn = enable_mkldnn,
-                    rec_char_dict_path = "/home/aistudio/PaddleOCR/ppocr/utils/tsbd_dict.txt",         
-                    rec_image_shape = "3, 38, 266",
+                    rec_char_dict_path = "/home/aistudio/PaddleOCR/ppocr/utils/sbd_dict.txt", #Use specific dictionary         
+                    rec_image_shape = "3, 38, 266",                                            #Use specific shape of recognition image
                     det_model_dir=det_model_dir,cls_model_dir=cls_model_dir,rec_model_dir=rec_model_dir
                     )
 
@@ -91,6 +93,7 @@ if __name__=='__main__':
     AED = 0
     # Word-level precision
     P = 0
+    # Intersection-over unit
     IOU = 0
     count = 0
 
@@ -115,7 +118,7 @@ if __name__=='__main__':
         img_label = img_label.replace(" ","")
         
         result = ocr.ocr(img_set_dir+img_path, cls=use_angle_cls)
-        # Calculate word-level precision, NED
+        # Calculate normalized-edit distance, NED
         NED = 1
         if visualization:
             predImg = cv2.imread(img_set_dir+img_path)
@@ -145,7 +148,7 @@ if __name__=='__main__':
                     cv2.imwrite(output_dir+"visualization/wrong/"+img_path,predImg)
         AED = AED + NED
         
-    sys.stdout = Logger(output_dir+str(t)+".log", sys.stdout)
+    sys.stdout = Logger(output_dir+str(log_file_name)+".log", sys.stdout)
     AED = AED / (len(lines))
     P = P / (len(lines))
     IOU = IOU / (len(lines))
@@ -160,7 +163,7 @@ if __name__=='__main__':
         [img_path,img_label] = line.split("\t")
         result = ocr.ocr(img_set_dir+img_path, cls=use_angle_cls)
     end = time.process_time()
-    sys.stdout = Logger(output_dir+str(t)+".log", sys.stdout)
+    sys.stdout = Logger(output_dir+str(log_file_name)+".log", sys.stdout)
 
     # Print performance in log file
     print("Detection Model:"+det_model_dir)
@@ -170,7 +173,10 @@ if __name__=='__main__':
     if use_gpu:
         print("Use GPU")
     else:
-        print("Use CPU(mlkdnn)")
+        if enable_mkldnn:
+            print("Use CPU(enable mlkdnn)")
+        else:
+            print("Use CPU")
     print("The number of all test images:"+str(len(lines)))
     print("The number of images failed the test:"+str(count))
     print("Detection intersection-over unit:"+str(IOU))
@@ -187,7 +193,4 @@ if __name__=='__main__':
         print("pred:",wrong_rec['pred'])
 
     sys.stdout = sys.__stdout__
-    with open(output_dir+str(t)+".log",'r') as log:
-        lines = log.readlines()
-        for line in lines:
-            print(line.replace("\n",""))
+    print("Finished!")
