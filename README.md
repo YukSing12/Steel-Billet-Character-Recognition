@@ -25,6 +25,8 @@ Steel-Billet-Character-Recognition
   - [ ] Model compression    
   - [ ] Model quantization    
 - [ ] Model deployment    
+  - [ ] C++ Inference
+  - [ ] TensorRT Acceleration
 
 ## Installation   
 
