@@ -37,42 +37,57 @@ Steel-Billet-Character-Recognition
 - PaddleSlim-develop
 - PaddlePaddle-2.0rc
 
-### Installation [(more version)](https://www.paddlepaddle.org.cn/install/quick):
-```bash
-  # Create conda environment
+### Installation:
 
+#### Create conda environment
+```bash   
   conda create -n SBCR python=3.7.4
   conda activate SBCR
+```
 
-  # Install PaddlePaddle with CUDA 10.0
+#### Install PaddlePaddle with CUDA 10.0  [(more version)](https://www.paddlepaddle.org.cn/install/quick):
+```bash
   conda install paddlepaddle-gpu==2.0.0rc0 cudatoolkit=10.0 -c paddle
-  
-  # Check installation of paddle
+ ```
+#### Check installation of paddle
+```bash
   CUDA_VISIBLE_DEVICES=0 python ./run_check.py
-  
-  # If installed successfully, it will show that
-  # Your Paddle Fluid works well on SINGLE GPU or CPU.
-  # Your Paddle Fluid works well on MUTIPLE GPU or CPU.
-  # Your Paddle Fluid is installed successfully! Let's start deep Learning with Paddle Fluid now
+```
+#### If installed successfully, it will show that
+```bash
+  Your Paddle Fluid works well on SINGLE GPU or CPU.
+  Your Paddle Fluid works well on MUTIPLE GPU or CPU.
+  Your Paddle Fluid is installed successfully! Let's start deep Learning with Paddle Fluid now
+```
 
-  # Clone repo
+#### Clone Repo
+```bash
   git clone https://github.com/YukSing12/Steel-Billet-Character-Recognition.git
   cd Steel-Billet-Character-Recognition/
-  
-  # Clone PaddleOCR
+```
+
+#### Install PaddleOCR-develop from [repo](https://github.com/PaddlePaddle/PaddleOCR)
+```bash
   git clone https://github.com/PaddlePaddle/PaddleOCR.git
-  # Install paddleocr
+```
+
+#### Install paddleocr
+```bash
   cd PaddleOCR/
   pip install -r requirements.txt -i https://mirror.baidu.com/pypi/simple
   python setup.py install
-  
-  # Clone PaddleSlim
+```
+
+#### Clone PaddleSlim-develop from [repo](https://github.com/PaddlePaddle/PaddleSlim)
+```bash
   git clone https://github.com/PaddlePaddle/PaddleSlim.git
-  # Install paddleslim
+```
+
+#### Install paddleslim
+```bash
   cd PaddleSlim/
   pip install -r requirements.txt -i https://mirror.baidu.com/pypi/simple
   python setup.py install
-
 ```
 
 ## Dataset
