@@ -24,7 +24,9 @@ Steel-Billet-Character-Recognition
 - [ ] 模型优化   
   - [ ] 模型压缩    
   - [ ] 模型量化    
-- [ ] 模型部署   
+- [ ] 模型部署
+  - [ ] C++ 预测
+  - [ ] TensorRT 加速
 
 ## 安装   
 
@@ -35,41 +37,59 @@ Steel-Billet-Character-Recognition
 - PaddleSlim-develop
 - PaddlePaddle-2.0rc
 
-### 安装 [(更多版本)](https://www.paddlepaddle.org.cn/install/quick):
-```bash
-  # Create conda environment
+### 安装:
 
+#### 创建conda环境
+```bash   
   conda create -n SBCR python=3.7.4
   conda activate SBCR
+```
 
-  # Install PaddlePaddle with 10.0
+#### 安装CUDA 10.0的Paddlepaddle  [(更多版本)](https://www.paddlepaddle.org.cn/install/quick):
+```bash
   conda install paddlepaddle-gpu==2.0.0rc0 cudatoolkit=10.0 -c paddle
-  
-  # Check installation of paddle
+ ```
+#### 检查paddlepaddle的安装
+```bash
   CUDA_VISIBLE_DEVICES=0 python ./run_check.py
-  
-  # If installed successfully, it will show that
-  # Your Paddle Fluid works well on SINGLE GPU or CPU.
-  # Your Paddle Fluid works well on MUTIPLE GPU or CPU.
-  # Your Paddle Fluid is installed successfully! Let's start deep Learning with Paddle Fluid now
+```
+#### 如果安装成功，则显示
+```bash
+  Your Paddle Fluid works well on SINGLE GPU or CPU.
+  Your Paddle Fluid works well on MUTIPLE GPU or CPU.
+  Your Paddle Fluid is installed successfully! Let's start deep Learning with Paddle Fluid now
+```
 
-  # Clone repo
+#### 克隆 Repo
+```bash
   git clone https://github.com/YukSing12/Steel-Billet-Character-Recognition.git
   cd Steel-Billet-Character-Recognition/
-  
-  # Clone PaddleOCR
-  git clone https://github.com/PaddlePaddle/PaddleOCR.git
-  # Install paddleocr
-  cd PaddleOCR/
-  python setup.py install
-  
-  # Clone PaddleSlim
-  git clone https://github.com/PaddlePaddle/PaddleSlim.git
-  # Install paddleslim
-  cd PaddleSlim/
-  python setup.py install
-
 ```
+
+#### 克隆 [PaddleOCR-develop](https://github.com/PaddlePaddle/PaddleOCR)
+```bash
+  git clone https://github.com/PaddlePaddle/PaddleOCR.git
+```
+
+#### 安装 paddleocr
+```bash
+  cd PaddleOCR/
+  pip install -r requirements.txt -i https://mirror.baidu.com/pypi/simple
+  python setup.py install
+```
+
+#### 克隆 [PaddleSlim-develop](https://github.com/PaddlePaddle/PaddleSlim)
+```bash
+  git clone https://github.com/PaddlePaddle/PaddleSlim.git
+```
+
+#### 安装 paddleslim
+```bash
+  cd PaddleSlim/
+  pip install -r requirements.txt -i https://mirror.baidu.com/pypi/simple
+  python setup.py install
+```
+
 ## 数据集
 ### 湘钢数据集   
 <div align="center">
