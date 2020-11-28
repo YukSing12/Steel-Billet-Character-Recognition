@@ -1,4 +1,6 @@
-from paddleocr import PaddleOCR
+# import paddle
+from paddleocr import PaddleOCR # use tools.infer.predict_system instead
+import paddle.fluid.profiler as profiler
 import edit_distance
 import sys
 import os
@@ -46,45 +48,43 @@ def cal_iou(box1, box2):
 
 if __name__=='__main__':
 
+    # paddle.enable_static()
     # Preference
-    output_dir = "./output/"
+    output_dir = 'output'
     visualization = False
-    #img_set_dir = "Tangshan-Steel-Billet-Dataset/det_image/eval/"
-    img_set_dir = "Steel-Billet-Dataset/test_image/"
+    img_set_dir = os.path.join('Tangshan-Steel-Billet-Dataset','det_image','eval','')
+#    img_set_dir = os.path.join('Xiang-Steel-Billet-Dataset','test_image','')
 
-    #label_file = "Tangshan-Steel-Billet-Dataset/text_localization_eval_label.txt"
-    label_file = "Steel-Billet-Dataset/text_localization_test_label.txt"
-    
-    # Set GPU
-    os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID" # see issue #152
-    os.environ["CUDA_VISIBLE_DEVICES"]="0"
+
+    label_file = os.path.join('Tangshan-Steel-Billet-Dataset','text_localization_eval_label.txt')
+    #label_file = os.path.join('Xiang-Steel-Billet-Dataset','text_localization_eval_label.txt')
 
     # Init Logger
-    log_file_name = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    # log_file_name = 'server_det_tsbd'
-    output_dir = output_dir + str(log_file_name) + "/"
+    log_file_name = time.strftime("%Y-%m-%d-H-%M-%S", time.localtime())
+#    log_file_name = 'mobile_det+server_rec_sbd'
+    output_dir = os.path.join(output_dir,str(log_file_name),'')
     if visualization:
-        if not os.path.exists(output_dir+"visualization/correct/"):
-            os.makedirs(output_dir+"visualization/correct/")
-        if not os.path.exists(output_dir+"visualization/wrong/"):
-            os.makedirs(output_dir+"visualization/wrong/")
+        if not os.path.exists(os.path.join(output_dir,'visualization','correct')):
+            os.makedirs(os.path.join(output_dir,'visualization','correct'))
+        if not os.path.exists(os.path.join(output_dir,'visualization','wrong')):
+            os.makedirs(os.path.join(output_dir,'visualization','wrong'))
     else:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
-    sys.stdout = Logger(output_dir+str(log_file_name)+".log", sys.stdout)
-    sys.stderr = Logger(output_dir+str(log_file_name)+"_error.log", sys.stderr)
+    sys.stdout = Logger(os.path.join(output_dir,str(log_file_name)+".log"), sys.stdout)
+    sys.stderr = Logger(os.path.join(output_dir,str(log_file_name)+"_error.log"), sys.stderr)
     wrong_rec_logger = []
 
     # Load model
-    use_gpu = False
+    use_gpu = False 
     enable_mkldnn = False
     use_angle_cls = False   
-    det_model_dir = "PaddleOCR/inference/mobile_det_sbd"
-    cls_model_dir = "PaddleOCR/inference/ch_ppocr_mobile_v1.1_cls_infer"
-    rec_model_dir = "PaddleOCR/inference/mobile_rec_sbd"
-    ocr = PaddleOCR(use_angle_cls=use_angle_cls, lang="ch",use_gpu=use_gpu,use_space_char=False,gpu_mem=8000,
+    det_model_dir = os.path.join('PaddleOCR','inference','mobile_det_tsbd')
+    cls_model_dir = os.path.join('PaddleOCR','inference','ch_ppocr_mobile_v1.1_cls_infer')
+    rec_model_dir = os.path.join('PaddleOCR','inference','mobile_rec_tsbd')
+    ocr = PaddleOCR(use_angle_cls=use_angle_cls, lang="ch",use_gpu=use_gpu,use_space_char=False,gpu_mem=4000,
                     enable_mkldnn = enable_mkldnn,
-                    rec_char_dict_path = "/home/aistudio/PaddleOCR/ppocr/utils/sbd_dict.txt", #Use specific dictionary         
+                    rec_char_dict_path = os.path.join('ppocr','utils','tsbd_dict.txt'), #Use specific dictionary         
                     rec_image_shape = "3, 38, 266",                                            #Use specific shape of recognition image
                     det_model_dir=det_model_dir,cls_model_dir=cls_model_dir,rec_model_dir=rec_model_dir
                     )
@@ -158,7 +158,7 @@ if __name__=='__main__':
     duration = 0
 
     sys.stdout = open(os.devnull, 'w')
-    start = time.process_time()
+    start = time.process_time() # exist error when use multi-threads
     for line in lines:
         [img_path,img_label] = line.split("\t")
         result = ocr.ocr(img_set_dir+img_path, cls=use_angle_cls)
@@ -194,3 +194,9 @@ if __name__=='__main__':
 
     sys.stdout = sys.__stdout__
     print("Finished!")
+    
+    # 
+    # with profiler.profiler('CPU', 'total', '/tmp/profile') as prof:
+    #     for i in range(epoc):
+    #         input = np.random.random(dshape).astype('float32')
+    #         exe.run(fluid.default_main_program(), feed={'data': input})
