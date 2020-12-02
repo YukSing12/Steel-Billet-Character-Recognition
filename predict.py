@@ -1,4 +1,3 @@
-# import paddle
 from paddleocr import PaddleOCR # use tools.infer.predict_system instead
 import paddle.fluid.profiler as profiler
 import edit_distance
@@ -45,10 +44,44 @@ def cal_iou(box1, box2):
     iou = area / (s1 + s2 - area)
     return iou
 
+def cal_time(log_file):
+    """
+    :param log_file: Name of log file.
+    :return: 
+        :total_predict_time: Total inference time(s) of entire model.
+        :avg_time: Average inference time(ms) of entire model.
+        :avg_det_time: Average inference time(ms) of detection model.
+        :avg_rec_time: Average inference time(ms) of recognitin model.
+    """
+    print("Calculating inference time")
+    log_file = os.path.join(log_file)
+    count = 0
+    total_predict_time = 0
+    avg_det_time = 0
+    avg_rec_time = 0
+    with open(log_file,'r') as fid:
+        lines = fid.readlines()
+        for line in lines[5:]:
+            if 'dt_boxes' in line:
+                _,time = line.split('elapse :')
+                time = time.replace('\n','')
+                avg_det_time = avg_det_time + float(time)
+            elif 'rec_res' in line:
+                _,time = line.split('elapse :')
+                time = time.replace('\n','')
+                avg_rec_time = avg_rec_time + float(time)
+            elif 'Predict time of' in line:
+                _,time = line.split(': ')
+                time = time.replace('s\n','')
+                total_predict_time = (total_predict_time + float(time))
+                count = count + 1
+    avg_det_time = avg_det_time / count    
+    avg_rec_time = avg_rec_time / count
+    avg_time = total_predict_time / count
+    return total_predict_time,avg_time,avg_det_time,avg_rec_time
 
 if __name__=='__main__':
 
-    # paddle.enable_static()
     # Preference
     output_dir = 'output'
     visualization = False
@@ -60,9 +93,10 @@ if __name__=='__main__':
     #label_file = os.path.join('Xiang-Steel-Billet-Dataset','text_localization_eval_label.txt')
 
     # Init Logger
-    log_file_name = time.strftime("%Y-%m-%d-H-%M-%S", time.localtime())
+    log_file_name = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
 #    log_file_name = 'mobile_det+server_rec_sbd'
     output_dir = os.path.join(output_dir,str(log_file_name),'')
+    log_file_name = os.path.join(output_dir,str(log_file_name)+".log")
     if visualization:
         if not os.path.exists(os.path.join(output_dir,'visualization','correct')):
             os.makedirs(os.path.join(output_dir,'visualization','correct'))
@@ -71,17 +105,17 @@ if __name__=='__main__':
     else:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
-    sys.stdout = Logger(os.path.join(output_dir,str(log_file_name)+".log"), sys.stdout)
-    sys.stderr = Logger(os.path.join(output_dir,str(log_file_name)+"_error.log"), sys.stderr)
+    sys.stdout = Logger(log_file_name, sys.stdout)
+    sys.stderr = Logger(log_file_name, sys.stderr)
     wrong_rec_logger = []
-
+    
     # Load model
-    use_gpu = False 
+    use_gpu = True 
     enable_mkldnn = False
     use_angle_cls = False   
-    det_model_dir = os.path.join('PaddleOCR','inference','mobile_det_tsbd')
+    det_model_dir = os.path.join('PaddleOCR','inference','server_det_tsbd_slim')
     cls_model_dir = os.path.join('PaddleOCR','inference','ch_ppocr_mobile_v1.1_cls_infer')
-    rec_model_dir = os.path.join('PaddleOCR','inference','mobile_rec_tsbd')
+    rec_model_dir = os.path.join('PaddleOCR','inference','server_rec_tsbd')
     ocr = PaddleOCR(use_angle_cls=use_angle_cls, lang="ch",use_gpu=use_gpu,use_space_char=False,gpu_mem=4000,
                     enable_mkldnn = enable_mkldnn,
                     rec_char_dict_path = os.path.join('ppocr','utils','tsbd_dict.txt'), #Use specific dictionary         
@@ -106,7 +140,6 @@ if __name__=='__main__':
         lines = test_data.readlines()
 
     #Inference in a folder
-    sys.stdout = open(os.devnull, 'w')
     for line in lines:
         # Decode
         line = line.replace("\n","")
@@ -148,25 +181,15 @@ if __name__=='__main__':
                     cv2.imwrite(output_dir+"visualization/wrong/"+img_path,predImg)
         AED = AED + NED
         
-    sys.stdout = Logger(output_dir+str(log_file_name)+".log", sys.stdout)
     AED = AED / (len(lines))
     P = P / (len(lines))
     IOU = IOU / (len(lines))
 
     # Calculate inference time
-    print("Calculating inference time")
-    duration = 0
-
-    sys.stdout = open(os.devnull, 'w')
-    start = time.process_time() # exist error when use multi-threads
-    for line in lines:
-        [img_path,img_label] = line.split("\t")
-        result = ocr.ocr(img_set_dir+img_path, cls=use_angle_cls)
-    end = time.process_time()
-    sys.stdout = Logger(output_dir+str(log_file_name)+".log", sys.stdout)
+    total_predict_time,avg_time,avg_det_time,avg_rec_time = cal_time(log_file_name)
 
     # Print performance in log file
-    print("Detection Model:"+det_model_dir)
+    print("\n\nDetection Model:"+det_model_dir)
     if(use_angle_cls):
         print("Classification Model:"+cls_model_dir)
     print("Recognition Model:"+rec_model_dir)
@@ -183,20 +206,15 @@ if __name__=='__main__':
     print("Precision:"+str(P))
     print("Accuracy:"+str(1-AED))
     print("Average normalized edit-distance:"+str(AED))
-    print("Inference time(s):"+str(end-start))
-    print("Mean inference time(ms):"+str((end-start)/len(lines)*1000))
+    print("Total inference time(s) of entire model:"+str(total_predict_time))
+    print("Average inference time(ms) of entire model:"+str(avg_time*1000))
+    print("Average inference time(ms) of detection model:"+str(avg_det_time*1000))
+    print("Average inference time(ms) of recognition model:"+str(avg_rec_time*1000))
     print("\n")
     print("Wrong recognition details:")
     for wrong_rec in wrong_rec_logger:
         print(wrong_rec['path'])
         print("label:",wrong_rec['label'])
         print("pred:",wrong_rec['pred'])
-
-    sys.stdout = sys.__stdout__
     print("Finished!")
-    
-    # 
-    # with profiler.profiler('CPU', 'total', '/tmp/profile') as prof:
-    #     for i in range(epoc):
-    #         input = np.random.random(dshape).astype('float32')
-    #         exe.run(fluid.default_main_program(), feed={'data': input})
+
