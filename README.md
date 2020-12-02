@@ -94,11 +94,12 @@ Steel-Billet-Character-Recognition
 
 ### Xiang-Steel-Billet-Dataset
 <div align="center">
-    <img src="Xiang-Steel-Billet-Dataset/train_image/BXAIa2019082512471601.jpg" width="400">
+    <img src="output/BXAIa2019082513310901.jpg" width="400">
+    <img src="output/BXAIa2019082518341801.jpg" width="400">
 </div>
 
 ### Tangshan-Steel-Billet-Dataset    
 <div align="center">
     <img src="output/01440.JPG" width=400>
-    <img src="output/01510.JPG" width=400>
+    <img src="output/01448.JPG" width=400>
 </div>

@@ -93,11 +93,12 @@ Steel-Billet-Character-Recognition
 ## 数据集
 ### 湘钢数据集   
 <div align="center">
-    <img src="Xiang-Steel-Billet-Dataset/train_image/BXAIa2019082512471601.jpg" width="400">
+    <img src="output/BXAIa2019082513310901.jpg" width="400">
+    <img src="output/BXAIa2019082518341801.jpg" width="400">
 </div>
 
 ### 唐钢数据集       
 <div align="center">
     <img src="output/01440.JPG" width=400>
-    <img src="output/01510.JPG" width=400>
+    <img src="output/01448.JPG" width=400>
 </div>
