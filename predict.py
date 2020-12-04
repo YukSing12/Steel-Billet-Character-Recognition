@@ -22,10 +22,14 @@ class Logger(object):
 
 
 def cal_iou(box1, box2):
-    """
-    :param box1: = np.array([[ptx1,pty1],[ptx2,pty2],[ptx3,pty3],[ptx4,pty4]])
-    :param box2: = np.array([[ptx5,pty5],[ptx6,pty6],[ptx7,pty7],[ptx8,pty8]])
-    :return: 
+    """ Calculates iou(intersection-over unit) between box1 and box2.
+    
+    Args:
+        box1(np.array([[ptx1,pty1],[ptx2,pty2],[ptx3,pty3],[ptx4,pty4]]))
+        box2(np.array([[ptx5,pty5],[ptx6,pty6],[ptx7,pty7],[ptx8,pty8]]))
+
+    Returns: 
+        iou: iou(intersection-over unit) between box1 and box2.
     """
     xmin1, ymin1, xmax1, ymax1 = min(box1[:,0]),min(box1[:,1]),max(box1[:,0]),max(box1[:,1])
     xmin2, ymin2, xmax2, ymax2 = min(box2[:,0]),min(box2[:,1]),max(box2[:,0]),max(box2[:,1])
@@ -45,13 +49,16 @@ def cal_iou(box1, box2):
     return iou
 
 def cal_time(log_file):
-    """
-    :param log_file: Name of log file.
-    :return: 
-        :total_predict_time: Total inference time(s) of entire model.
-        :avg_time: Average inference time(ms) of entire model.
-        :avg_det_time: Average inference time(ms) of detection model.
-        :avg_rec_time: Average inference time(ms) of recognitin model.
+    """ Calculates inference time of difference stages in the model through a log file.
+
+    Args:
+        log_file(str): Name of log file.
+
+    Returns: 
+        total_predict_time: Total inference time(s) of entire model.
+        avg_time: Average inference time(ms) of entire model.
+        avg_det_time: Average inference time(ms) of detection model.
+        avg_rec_time: Average inference time(ms) of recognitin model.
     """
     print("Calculating inference time")
     log_file = os.path.join(log_file)
@@ -72,9 +79,11 @@ def cal_time(log_file):
                 avg_rec_time = avg_rec_time + float(time)
             elif 'Predict time of' in line:
                 _,time = line.split(': ')
-                time = time.replace('s\n','')
+                time = time.replace('\n','')
+                time = time.replace('s','')
                 total_predict_time = (total_predict_time + float(time))
                 count = count + 1
+    #print("count:",count)
     avg_det_time = avg_det_time / count    
     avg_rec_time = avg_rec_time / count
     avg_time = total_predict_time / count
@@ -115,7 +124,7 @@ if __name__=='__main__':
     use_angle_cls = False   
     det_model_dir = os.path.join('PaddleOCR','inference','server_det_tsbd_slim')
     cls_model_dir = os.path.join('PaddleOCR','inference','ch_ppocr_mobile_v1.1_cls_infer')
-    rec_model_dir = os.path.join('PaddleOCR','inference','server_rec_tsbd')
+    rec_model_dir = os.path.join('PaddleOCR','inference','mobile_rec_tsbd')
     ocr = PaddleOCR(use_angle_cls=use_angle_cls, lang="ch",use_gpu=use_gpu,use_space_char=False,gpu_mem=4000,
                     enable_mkldnn = enable_mkldnn,
                     rec_char_dict_path = os.path.join('ppocr','utils','tsbd_dict.txt'), #Use specific dictionary         
@@ -184,7 +193,7 @@ if __name__=='__main__':
     AED = AED / (len(lines))
     P = P / (len(lines))
     IOU = IOU / (len(lines))
-
+    
     # Calculate inference time
     total_predict_time,avg_time,avg_det_time,avg_rec_time = cal_time(log_file_name)
 
