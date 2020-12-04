@@ -89,6 +89,24 @@ def cal_time(log_file):
     avg_time = total_predict_time / count
     return total_predict_time,avg_time,avg_det_time,avg_rec_time
 
+def get_size(file_path):
+    """ Get size of file or directory.
+
+    Args:
+        file_path(str): Path of file or directory.
+
+    Returns: 
+        size(int): Size of file or directory in bits.
+    """
+    size = 0
+    if os.path.isdir(file_path):
+        for root, dirs, files in os.walk(file_path):
+            for f in files:
+                size += os.path.getsize(os.path.join(root, f))
+    elif os.path.isfile(file_path):
+        size = (os.path.getsize(file_path))
+    return size
+
 if __name__=='__main__':
 
     # Preference
@@ -122,9 +140,9 @@ if __name__=='__main__':
     use_gpu = True 
     enable_mkldnn = False
     use_angle_cls = False   
-    det_model_dir = os.path.join('PaddleOCR','inference','server_det_tsbd_slim')
+    det_model_dir = os.path.join('PaddleOCR','inference','mobile_det_tsbd_slim')
     cls_model_dir = os.path.join('PaddleOCR','inference','ch_ppocr_mobile_v1.1_cls_infer')
-    rec_model_dir = os.path.join('PaddleOCR','inference','mobile_rec_tsbd')
+    rec_model_dir = os.path.join('PaddleOCR','inference','mobile_rec_tsbd_slim')
     ocr = PaddleOCR(use_angle_cls=use_angle_cls, lang="ch",use_gpu=use_gpu,use_space_char=False,gpu_mem=4000,
                     enable_mkldnn = enable_mkldnn,
                     rec_char_dict_path = os.path.join('ppocr','utils','tsbd_dict.txt'), #Use specific dictionary         
@@ -198,10 +216,10 @@ if __name__=='__main__':
     total_predict_time,avg_time,avg_det_time,avg_rec_time = cal_time(log_file_name)
 
     # Print performance in log file
-    print("\n\nDetection Model:"+det_model_dir)
+    print("\n\nDetection Model:{}({:.1f}MB)".format(det_model_dir,float(get_size(det_model_dir))/1024/1024))
     if(use_angle_cls):
-        print("Classification Model:"+cls_model_dir)
-    print("Recognition Model:"+rec_model_dir)
+        print("Classification Model:{}({:.1f}MB)".format(cls_model_dir,float(get_size(cls_model_dir))/1024/1024))
+    print("Recognition Model:{}({:.1f}MB)".format(rec_model_dir,float(get_size(rec_model_dir))/1024/1024))
     if use_gpu:
         print("Use GPU")
     else:
@@ -224,6 +242,6 @@ if __name__=='__main__':
     for wrong_rec in wrong_rec_logger:
         print(wrong_rec['path'])
         print("label:",wrong_rec['label'])
-        print("pred:",wrong_rec['pred'])
+        print("pred :",wrong_rec['pred'])
     print("Finished!")
 
