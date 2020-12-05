@@ -1,5 +1,4 @@
 from paddleocr import PaddleOCR # use tools.infer.predict_system instead
-import paddle.fluid.profiler as profiler
 import edit_distance
 import sys
 import os
@@ -137,12 +136,12 @@ if __name__=='__main__':
     wrong_rec_logger = []
     
     # Load model
-    use_gpu = True 
-    enable_mkldnn = False
+    use_gpu = False 
+    enable_mkldnn = True
     use_angle_cls = False   
-    det_model_dir = os.path.join('PaddleOCR','inference','mobile_det_tsbd_slim')
+    det_model_dir = os.path.join('PaddleOCR','inference','server_det_tsbd_slim')
     cls_model_dir = os.path.join('PaddleOCR','inference','ch_ppocr_mobile_v1.1_cls_infer')
-    rec_model_dir = os.path.join('PaddleOCR','inference','mobile_rec_tsbd_slim')
+    rec_model_dir = os.path.join('PaddleOCR','inference','server_rec_tsbd_slim')
     ocr = PaddleOCR(use_angle_cls=use_angle_cls, lang="ch",use_gpu=use_gpu,use_space_char=False,gpu_mem=4000,
                     enable_mkldnn = enable_mkldnn,
                     rec_char_dict_path = os.path.join('ppocr','utils','tsbd_dict.txt'), #Use specific dictionary         
@@ -216,12 +215,12 @@ if __name__=='__main__':
     total_predict_time,avg_time,avg_det_time,avg_rec_time = cal_time(log_file_name)
 
     # Print performance in log file
-    print("\n\nDetection Model:{}({:.1f}MB)".format(det_model_dir,float(get_size(det_model_dir))/1024/1024))
+    print("\n\nDetection Model:{}({:.2f}MB)".format(det_model_dir,float(get_size(det_model_dir))/1024/1024))
     if(use_angle_cls):
-        print("Classification Model:{}({:.1f}MB)".format(cls_model_dir,float(get_size(cls_model_dir))/1024/1024))
-    print("Recognition Model:{}({:.1f}MB)".format(rec_model_dir,float(get_size(rec_model_dir))/1024/1024))
+        print("Classification Model:{}({:.2f}MB)".format(cls_model_dir,float(get_size(cls_model_dir))/1024/1024))
+    print("Recognition Model:{}({:.2f}MB)".format(rec_model_dir,float(get_size(rec_model_dir))/1024/1024))
     if use_gpu:
-        print("Use GPU")
+        print("Use GPU("+os.environ["CUDA_VISIBLE_DEVICES"]+")") if "CUDA_VISIBLE_DEVICES" in os.environ else print("Use GPU(0)")
     else:
         if enable_mkldnn:
             print("Use CPU(enable mlkdnn)")
