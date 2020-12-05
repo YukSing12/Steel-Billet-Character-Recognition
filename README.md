@@ -12,8 +12,8 @@ Steel-Billet-Character-Recognition
 ├── [Tangshan-Steel-Billet-Dataset](https://github.com/YukSing12/Tangshan-Steel-Billet-Dataset)    (Not open source yet)   
 ├── [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)    
 ├── [PaddleSlim](https://github.com/PaddlePaddle/PaddleSlim)   
-├── predict.py   
-└── results    
+├── eval.py   
+└── output    
 
 ## Todo list    
 
@@ -22,7 +22,7 @@ Steel-Billet-Character-Recognition
   - [x] Recognition: CRNN([paper](https://arxiv.org/abs/1507.05717))   
 - [x] Model retraining     
 - [ ] Model optimization   
-  - [ ] Model compression    
+  - [x] Model compression    
   - [ ] Model quantization    
 - [ ] Model deployment    
   - [ ] C++ Inference
