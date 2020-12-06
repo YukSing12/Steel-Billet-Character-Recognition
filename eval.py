@@ -6,7 +6,7 @@ import time
 import cv2
 import numpy as np
 import json
-from utility import Logger,cal_time,cal_iou,get_size
+from utility import Logger,get_infer_time,get_iou,get_size
 
 if __name__=='__main__':
 
@@ -93,7 +93,7 @@ if __name__=='__main__':
             pred_label = info[1][0]
             pred_score = info[1][1]
             NED = min(NED,edit_distance.SequenceMatcher(img_label,pred_label).distance()/max(len(img_label),len(pred_label)))
-            IOU = IOU + cal_iou(img_box,pred_box)
+            IOU = IOU + get_iou(img_box,pred_box)
             if visualization:
                 cv2.polylines(predImg, [pred_box], 1, (0,255,0))
                 cv2.putText(predImg, 'confidence:'+str(pred_score), (pred_box[0][0],pred_box[0][1]-50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0), 1, cv2.LINE_AA)
@@ -113,7 +113,7 @@ if __name__=='__main__':
     IOU = IOU / (len(lines))
     
     # Calculate inference time
-    total_predict_time,avg_time,avg_det_time,avg_rec_time = cal_time(log_file_name)
+    total_predict_time,avg_time,avg_det_time,avg_rec_time = get_infer_time(log_file_name)
 
     # Print performance in log file
     print("\n\nDetection Model:{}({:.2f}MB)".format(det_model_dir,float(get_size(det_model_dir))/1024/1024))

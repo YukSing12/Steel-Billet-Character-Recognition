@@ -10,7 +10,7 @@ class Logger(object):
     def flush(self):
         pass
 
-def cal_iou(box1, box2):
+def get_iou(box1, box2):
     """ Calculates iou(intersection-over unit) between box1 and box2.
     
     Args:
@@ -37,7 +37,7 @@ def cal_iou(box1, box2):
     iou = area / (s1 + s2 - area)
     return iou
 
-def cal_time(log_file):
+def get_infer_time(log_file):
     """ Calculates inference time of difference stages in the model through a log file.
 
     Args:
@@ -95,3 +95,26 @@ def get_size(file_path):
     elif os.path.isfile(file_path):
         size = (os.path.getsize(file_path))
     return size
+
+def get_aspect_ratio(img_set_dir):
+    """ Get aspect ratio of images in directory.
+
+    Args:
+        img_set_dir(str): Directory of images.
+
+    Returns: 
+        aspect_ratio(float): Aspect ratio of images in directory.
+        m_width(float): Mean width of images in directory.
+        m_height(float): Mean height of images in directory.
+    """
+    m_width = 0
+    m_height = 0
+    images = glob.glob(img_set_dir+'*.jpg')
+    for image in images:
+        img = cv2.imread(image)
+        m_width += img.shape[1]
+        m_height += img.shape[0]
+    m_width = m_width/len(images)
+    m_height = m_height/len(images)
+    aspect_ratio = m_width/m_height
+    return aspect_ratio,m_width,m_height
