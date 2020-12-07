@@ -49,7 +49,7 @@ def get_infer_time(log_file):
         avg_det_time: Average inference time(ms) of detection model.
         avg_rec_time: Average inference time(ms) of recognitin model.
     """
-    print("Calculating inference time")
+    print('Calculating inference time')
     log_file = os.path.join(log_file)
     count = 0
     total_predict_time = 0
@@ -72,7 +72,7 @@ def get_infer_time(log_file):
                 time = time.replace('s','')
                 total_predict_time = (total_predict_time + float(time))
                 count = count + 1
-    #print("count:",count)
+    #print('count:',count)
     avg_det_time = avg_det_time / count    
     avg_rec_time = avg_rec_time / count
     avg_time = total_predict_time / count
