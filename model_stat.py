@@ -84,7 +84,9 @@ def _summary_model(block_vars, one_op):
         out_data_shape = block_vars[one_op.output("Output")[0]].shape
         c_out, c_in, k_h, k_w = k_arg_shape
         _, c_out_, h_out, w_out = out_data_shape
-        assert c_out == c_out_, 'shape error!'
+        # assert c_out == c_out_, 'shape error!'
+        out_data_shape = (out_data_shape[0],k_arg_shape[0],out_data_shape[2],out_data_shape[3])
+        in_data_shape = (in_data_shape[0],k_arg_shape[1],in_data_shape[2],in_data_shape[3])
         k_groups = one_op.attr("groups")
         kernel_ops = k_h * k_w * (c_in / k_groups)
         bias_ops = 0 if one_op.input("Bias") == [] else 1
