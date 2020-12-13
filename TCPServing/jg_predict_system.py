@@ -245,7 +245,7 @@ if __name__ == "__main__":
     main(use_gpu = False,
         enable_mkldnn = False,
         use_angle_cls = False,
-        det_model_dir = os.path.join("..","tmp","Steel-Billet-Character-Recognition","PaddleOCR","inference","mobile_det_tsbd_slim",""),
-        rec_model_dir = os.path.join("..","tmp","Steel-Billet-Character-Recognition","PaddleOCR","inference","server_rec_tsbd_slim",""),
-        rec_char_dict_path = os.path.join("..","tmp","Steel-Billet-Character-Recognition","PaddleOCR","ppocr","utils","tsbd_dict.txt"),
+        det_model_dir = os.path.join("..","PaddleOCR","inference","mobile_det_tsbd_slim",""),
+        rec_model_dir = os.path.join("..","PaddleOCR","inference","server_rec_tsbd_slim",""),
+        rec_char_dict_path = os.path.join("..","PaddleOCR","ppocr","utils","tsbd_dict.txt"),
         rec_image_shape = "3, 38, 266")
