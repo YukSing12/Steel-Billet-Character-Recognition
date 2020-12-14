@@ -36,6 +36,7 @@ from PIL import Image
 from tools.infer.utility import draw_ocr
 from tools.infer.utility import draw_ocr_box_txt
 from jg_protocol import ServerProtocol
+from jg_config import cfg
 import socket
 
 class TextSystem(object):
@@ -134,9 +135,9 @@ def sorted_boxes(dt_boxes):
     return _boxes
 
 
-def main(**kwargs):
+def main():
     args = utility.parse_args()
-    args.__dict__.update(**kwargs)
+    args.__dict__.update(cfg)
     text_sys = TextSystem(args)
     img = cv_imread("test.JPG")
     if img is None:
@@ -150,10 +151,9 @@ def main(**kwargs):
     # Start server system
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    # host = '127.0.0.1'
-    host = '127.0.0.1'
-    port = 1024
-    buf_size = 10*1024*1024*8
+    host = args.host
+    port = args.port
+    buf_size = args.buf_size
 
     server_socket.bind((host, port))
     server_socket.listen(5)
@@ -167,7 +167,8 @@ def main(**kwargs):
         logger.info("Connected IP Address: %s" % str(addr))
         clientsocket.send('Server of steel billet recognition system\r\n'.encode('utf-8'))
         
-        while True: # 与客户端阻塞式通信
+        while True: # Blocking comunication 
+            ## TODO Nonblocking comunication
             try:
                 msg = clientsocket.recv(buf_size)
             except ConnectionResetError as err:
@@ -181,7 +182,7 @@ def main(**kwargs):
                 break
             fnc,img_format,img_size,image_file = sp.decode(msg)
             logger.info('fnc:0x{:x}, img_format:{}, img_size:{}, img_path:{}'.format(fnc,img_format,img_size,image_file))
-
+            ## TODO Send image data directly through TCP.
             img, flag = check_and_read_gif(image_file)
             if not flag:
                 img = cv_imread(image_file)
@@ -193,7 +194,7 @@ def main(**kwargs):
             elapse = time.time() - starttime
             logger.info("Predict time of %s: %.3fs" % (os.path.abspath(image_file), elapse))
 
-            drop_score = 0.5
+            drop_score = args.drop_score
             dt_num = len(dt_boxes)
             results = []
             for dno in range(dt_num):
@@ -211,8 +212,8 @@ def main(**kwargs):
                                 'height':height,
                                 }
                 results.append(result_dict)
-            print("Encode:")
-            print(sp.encode(0x32,results,image_file[-3:],img.size,os.path.abspath(image_file)))
+            logger.info("Encode:")
+            logger.info(sp.encode(0x32,results,image_file[-3:],img.size,os.path.abspath(image_file)))
             clientsocket.send(sp.bs)
 
             if is_visualize:
@@ -234,7 +235,7 @@ def main(**kwargs):
                 cv2.imwrite(
                     os.path.join(draw_img_save, os.path.basename(image_file)),
                     draw_img[:, :, ::-1])
-                print("The visualized image saved in {}".format(
+                logger.info("The visualized image saved in {}".format(
                     os.path.join(draw_img_save, os.path.basename(image_file))))
 
         clientsocket.close()
@@ -242,10 +243,4 @@ def main(**kwargs):
 
 
 if __name__ == "__main__":
-    main(use_gpu = False,
-        enable_mkldnn = False,
-        use_angle_cls = False,
-        det_model_dir = os.path.join("..","tmp","Steel-Billet-Character-Recognition","PaddleOCR","inference","mobile_det_tsbd_slim",""),
-        rec_model_dir = os.path.join("..","tmp","Steel-Billet-Character-Recognition","PaddleOCR","inference","server_rec_tsbd_slim",""),
-        rec_char_dict_path = os.path.join("..","tmp","Steel-Billet-Character-Recognition","PaddleOCR","ppocr","utils","tsbd_dict.txt"),
-        rec_image_shape = "3, 38, 266")
+    main()
