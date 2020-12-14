@@ -111,6 +111,14 @@ class TextSystem(object):
         return dt_boxes, rec_res
 
 def cv_imread(file_path):
+    """
+    Read image in a path contains Chinese characters.
+    Failed to use cv2.imread() to read image in a path contains Chinese characters.
+    args:
+        file_path(str): image path contains Chinese or English characters.
+    return:
+        cv_img(cv2.mat): image read in cv format.
+    """
     cv_img = cv2.imdecode(np.fromfile(file_path,dtype=np.uint8),-1)
     return cv_img
 
