@@ -146,7 +146,9 @@ def sorted_boxes(dt_boxes):
 def main():
     args = utility.parse_args()
     args.__dict__.update(cfg)
+    # Init TextSystem
     text_sys = TextSystem(args)
+    # Predict one image to initialize the predict process.
     img = cv_imread("test.JPG")
     if img is None:
         logger.info("error in loading image:{}".format(image_file))
