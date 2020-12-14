@@ -155,7 +155,6 @@ def main():
     dt_boxes, rec_res = text_sys(img)
 
     logger.info("Finished initlizing recognition system.")
-    is_visualize = False
     font_path = args.vis_font_path
 
     # Start server system
@@ -226,7 +225,7 @@ def main():
             logger.info(sp.encode(0x32,results,image_file[-3:],img.size,os.path.abspath(image_file)))
             clientsocket.send(sp.bs)
 
-            if is_visualize:
+            if args.is_visualize:
                 image = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
                 boxes = dt_boxes
                 txts = [rec_res[i][0] for i in range(len(rec_res))]
@@ -239,7 +238,7 @@ def main():
                     scores,
                     drop_score=drop_score,
                     font_path=font_path)
-                draw_img_save = "./inference_results/"
+                draw_img_save = args.draw_img_save_path
                 if not os.path.exists(draw_img_save):
                     os.makedirs(draw_img_save)
                 cv2.imwrite(

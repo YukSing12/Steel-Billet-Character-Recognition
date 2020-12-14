@@ -4,7 +4,9 @@ cfg = {
     'host':'127.0.0.1',
     'port':1024,
     'buf_size':10*1024*1024*8,  #10 MB
-
+    'is_visualize':False,
+    'draw_img_save_path':'../output',
+    
     # Engine config
     'use_gpu':False,
     'gpu_mem':4000,
