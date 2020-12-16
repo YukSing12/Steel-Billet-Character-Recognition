@@ -18,19 +18,23 @@ Steel-Billet-Character-Recognition
 
 ## Todo list    
 
-- [x] Model selection   
+- [x] Model Selection   
   - [x] Detection: DB([paper](https://arxiv.org/abs/1911.08947))   
   - [ ] Classification:   
   - [x] Recognition: CRNN([paper](https://arxiv.org/abs/1507.05717))   
-- [x] Model retraining     
-- [ ] Model optimization   
-  - [x] Model compression    
-  - [ ] Model quantization    
-- [ ] Model deployment    
+- [x] Model Retraining     
+- [ ] Model Optimization   
+  - [x] Model Compression    
+  - [ ] Model Quantization    
+- [ ] Model Deployment    
   - [ ] C++ Inference
   - [ ] TensorRT Acceleration
   - [x] TCP Serving
   - [ ] PaddleHub Serving
+- [ ] [Data Synthesis](https://github.com/Sanster/text_renderer)
+  - [ ] Defective Character
+  - [ ] Dragged Character 
+  - [ ] Distorted Character
 
 ## Installation   
 

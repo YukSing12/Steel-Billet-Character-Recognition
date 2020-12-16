@@ -30,6 +30,10 @@ Steel-Billet-Character-Recognition
   - [ ] TensorRT 加速  
   - [x] TCP 服务
   - [ ] PaddleHub 服务
+- [ ] [数据合成](https://github.com/Sanster/text_renderer)
+  - [ ] 字符缺陷
+  - [ ] 字符拖点 
+  - [ ] 字符变形
 
 ## 安装   
 
