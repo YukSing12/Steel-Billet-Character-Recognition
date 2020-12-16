@@ -8,12 +8,13 @@ Steel Billet Character Recognition
 The overall directory structure of SBCR(Steel Billet Character Recognition) is introduced as follows:
 
 Steel-Billet-Character-Recognition   
-├── [Xiang-Steel-Billet-Dataset](https://github.com/YukSing12/Steel-Billet-Dataset)    (Not open source yet)   
+├── [Xiang-Steel-Billet-Dataset](https://github.com/YukSing12/Xiang-Steel-Billet-Dataset)    (Not open source yet)   
 ├── [Tangshan-Steel-Billet-Dataset](https://github.com/YukSing12/Tangshan-Steel-Billet-Dataset)    (Not open source yet)   
 ├── [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)    
 ├── [PaddleSlim](https://github.com/PaddlePaddle/PaddleSlim)   
-├── eval.py   
-└── output    
+├── [TCPServing](TCPServing)   
+└── output   
+     
 
 ## Todo list    
 
@@ -27,6 +28,8 @@ Steel-Billet-Character-Recognition
 - [ ] Model deployment    
   - [ ] C++ Inference
   - [ ] TensorRT Acceleration
+  - [x] TCP Serving
+  - [ ] PaddleHub Serving
 
 ## Installation   
 

@@ -12,7 +12,7 @@ Steel-Billet-Character-Recognition
 ├── [Tangshan-Steel-Billet-Dataset](https://github.com/YukSing12/Tangshan-Steel-Billet-Dataset)    (尚未开源)   
 ├── [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)    
 ├── [PaddleSlim](https://github.com/PaddlePaddle/PaddleSlim)    
-├── eval.py   
+├── [TCPServing](TCPServing)      
 └── output  
 
 ## 待办    
@@ -26,7 +26,9 @@ Steel-Billet-Character-Recognition
   - [ ] 模型量化    
 - [ ] 模型部署
   - [ ] C++ 预测
-  - [ ] TensorRT 加速
+  - [ ] TensorRT 加速  
+  - [x] TCP 服务
+  - [ ] PaddleHub 服务
 
 ## 安装   
 
