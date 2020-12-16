@@ -31,7 +31,7 @@ Steel-Billet-Character-Recognition
   - [ ] TensorRT Acceleration
   - [x] TCP Serving
   - [ ] PaddleHub Serving
-- [ ] [Data Synthesis](https://github.com/Sanster/text_renderer)
+- [ ] Data Synthesis: [text_renderer](https://github.com/Sanster/text_renderer), [StyleText](https://github.com/PaddlePaddle/PaddleOCR/tree/dygraph/StyleText)
   - [ ] Defective Character
   - [ ] Dragged Character 
   - [ ] Distorted Character
